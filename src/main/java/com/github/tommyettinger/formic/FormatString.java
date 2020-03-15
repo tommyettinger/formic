@@ -395,14 +395,11 @@ public final class FormatString {
         final int precision,
         final int radix) throws IOException {
     final String val;
-    final Long n = arg;
-    final long longValue = n.longValue();
-    if (radix == 10 || longValue > -1) {
-      val = Long.toString(longValue, radix);
+    final long longValue = arg;
+    if (longValue >= 0) {
+      val = '+' + Long.toString(longValue, radix);
     } else {
-      final long upper = 0xFFFFFFFFL&(longValue>>31);
-      final long lower = 0xFFFFFFFFL&(longValue);
-      val = Long.toString(upper, radix) + Long.toString(lower, radix);
+      val = Long.toString(longValue, radix);
     }
     appendify(a, val, flags, width, precision);
   }
@@ -418,14 +415,10 @@ public final class FormatString {
     final Number n = (Number) arg;
     final long longValue = n.longValue();
     final long modifier;
-    if (arg instanceof Integer) modifier = 0xFFFFFFFFL+1; else
-    if (arg instanceof Short)   modifier = 0xFFFFL+1;     else
-    if (arg instanceof Byte)    modifier = 0xFFL+1;               
-    else throw new UnknownFormatConversionException(
-      "not an integer number: " + arg
-    );
-    if (radix != 10 && longValue < 0) {
-      val = Long.toString(longValue + modifier, radix);
+    if (!((arg instanceof Integer) || (arg instanceof Short) || (arg instanceof Byte)))
+      throw new UnknownFormatConversionException("not an integer number: " + arg);
+    if (longValue >= 0) {
+      val = '+' + Long.toString(longValue, radix);
     } else {
       val = Long.toString(longValue, radix);
     }
@@ -480,13 +473,17 @@ public final class FormatString {
     if (width > 0) {
       final int difference = width - result.length();
       final boolean leftJustified = checkFlag(flags, FLAG_LEFT_JUSTIFIED);
+      final char sign = result.charAt(0);
+      final boolean hasSign = checkFlag(flags, FLAG_ALWAYS_INCLUDES_SIGN) || sign == '-';
+      if(hasSign) 
+        a.append(sign);
       if (!leftJustified && difference > 0) {
         char fill = checkFlag(flags, FLAG_LEADING_ZERO_PADDED) ? '0' : ' ';
-        fill(a, difference, fill);
+        fill(a, difference + (hasSign ? 0 : 1), fill);
       }
-      a.append(result);
+      a.append(result, 1, result.length());
       if (leftJustified && difference > 0) {
-        fill(a, difference, ' ');
+        fill(a, difference + (hasSign ? 0 : 1), ' ');
       }
       return;
     }
