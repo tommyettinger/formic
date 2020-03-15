@@ -386,7 +386,6 @@ public final class FormatString {
     appendify(a, val, flags, width, precision);
   }
 
-  // FIXME: this is broken for octal formats with negative values
   static void convertLong(
         final Appendable a,
         final Long arg, 
@@ -396,10 +395,18 @@ public final class FormatString {
         final int radix) throws IOException {
     final String val;
     final long longValue = arg;
-    if (longValue >= 0) {
-      val = '+' + Long.toString(longValue, radix);
-    } else {
-      val = Long.toString(longValue, radix);
+    switch (radix) {
+    case 2:
+      val = '+' + Long.toBinaryString(longValue);
+      break;
+    case 8:
+      val = '+' + Long.toOctalString(longValue);
+      break;
+    case 16:
+      val = '+' + Long.toHexString(longValue);
+      break;
+    default:
+      val = (longValue >= 0) ? '+' + Long.toString(longValue) : Long.toString(longValue);
     }
     appendify(a, val, flags, width, precision);
   }
@@ -412,15 +419,26 @@ public final class FormatString {
         final int precision,
         final int radix) throws IOException {
     final String val;
+
     final Number n = (Number) arg;
+    final long mask;
+    if (arg instanceof Integer) mask = 0xFFFFFFFFL; else
+    if (arg instanceof Short)   mask = 0xFFFFL;     else
+    if (arg instanceof Byte)    mask = 0xFFL;
+    else throw new UnknownFormatConversionException("not an integer number: " + arg);
     final long longValue = n.longValue();
-    final long modifier;
-    if (!((arg instanceof Integer) || (arg instanceof Short) || (arg instanceof Byte)))
-      throw new UnknownFormatConversionException("not an integer number: " + arg);
-    if (longValue >= 0) {
-      val = '+' + Long.toString(longValue, radix);
-    } else {
-      val = Long.toString(longValue, radix);
+    switch (radix) {
+    case 2:
+      val = '+' + Long.toBinaryString(longValue & mask);
+      break;
+    case 8:
+      val = '+' + Long.toOctalString(longValue & mask);
+      break;
+    case 16:
+      val = '+' + Long.toHexString(longValue & mask);
+      break;
+    default:
+      val = (longValue >= 0) ? '+' + Long.toString(longValue) : Long.toString(longValue);
     }
     appendify(a, val, flags, width, precision);
   }
