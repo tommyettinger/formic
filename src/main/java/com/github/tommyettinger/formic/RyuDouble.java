@@ -82,8 +82,8 @@ public final class RyuDouble {
 	public static void main (String[] args) {
 		DEBUG = true;
 		double value = Double.longBitsToDouble(0x7fefffffffffffffL);
-		String result = doubleToString(value), plain = doubleToString(value, -1);
-		System.out.println(String.format("%s, %s, %20f, %<20g, %<20e, %<20a, %s", result, plain, value, value));
+		System.out.println(String.format("%s, %s, %s, %20f, %<20g, %<20e, %<20a, %<s", 
+			doubleToString(value), doubleToString(value, -1), doubleToString(value, 1), value));
 	}
 
 	public static String doubleToString (double value) {
@@ -376,6 +376,7 @@ public final class RyuDouble {
 					output /= 10;
 					index++;
 				}
+				builder.append(result, 0, index);
 			} else if (exp + 1 >= olength) {
 				// Decimal dot is after any of the digits.
 				for (int i = 0; i < olength; i++) {

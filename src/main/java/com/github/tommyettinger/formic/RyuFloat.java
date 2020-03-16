@@ -84,8 +84,9 @@ public final class RyuFloat {
 	public static void main (String[] args) {
 		DEBUG = true;
 		float f = 0.33007812f;
-		String result = floatToString(f);
-		System.out.println(result + " " + f);
+		float value = Float.intBitsToFloat(0x7f7fffff);
+		System.out.println(String.format("%s, %s, %s, %20f, %<20g, %<20e, %<20a, %<s",
+			floatToString(value), floatToString(value, -1), floatToString(value, 1), value));
 	}
 
 	public static String floatToString (float value) {
@@ -93,19 +94,34 @@ public final class RyuFloat {
 	}
 
 	public static String floatToString (float value, int scientific) {
+		StringBuilder sb = new StringBuilder(15);
+		buildFloat(sb, value, scientific);
+		return sb.toString();
+	}
+	public static void buildFloat (StringBuilder builder, float value, int scientific) {
 		// Step 1: Decode the floating point number, and unify normalized and subnormal cases.
 		// First, handle all the trivial cases.
-		if (Float.isNaN(value))
-			return "NaN";
-		if (value == Float.POSITIVE_INFINITY)
-			return "Infinity";
-		if (value == Float.NEGATIVE_INFINITY)
-			return "-Infinity";
+		if (Float.isNaN(value)) {
+			builder.append("NaN");
+			return;
+		}
+		if (value == Float.POSITIVE_INFINITY) {
+			builder.append("Infinity");
+			return;
+		}
+		if (value == Float.NEGATIVE_INFINITY) {
+			builder.append("-Infinity");
+			return;
+		}
 		int bits = Float.floatToIntBits(value);
-		if (bits == 0)
-			return "0.0";
-		if (bits == 0x80000000)
-			return "-0.0";
+		if (bits == 0) {
+			builder.append("0.0");
+			return;
+		}
+		if (bits == 0x80000000) {
+			builder.append("-0.0");
+			return;
+		}
 
 		// Otherwise extract the mantissa and exponent bits and run the full algorithm.
 		int ieeeExponent = (bits >> FLOAT_MANTISSA_BITS) & FLOAT_EXPONENT_MASK;
@@ -236,8 +252,7 @@ public final class RyuFloat {
 		int exp = e10 + dplength - 1;
 
 		// Float.toString semantics requires using scientific notation if and only if outside this range.
-		boolean scientificNotation = !((exp >= -3) && (exp < 7));
-
+		boolean scientificNotation = scientific == 1 || (scientific == 0 && !((exp >= -3) && (exp < 7)));
 		int removed = 0;
 		if (dpIsTrailingZeros && !/*roundingMode.acceptUpperBound*/ (even)) {
 			dp--;
@@ -322,6 +337,7 @@ public final class RyuFloat {
 				result[index++] = (char)('0' + exp / 10);
 			}
 			result[index++] = (char)('0' + exp % 10);
+			builder.append(result, 0, index);
 		} else {
 			// Otherwise follow the Java spec for values in the interval [1E-3, 1E7).
 			if (exp < 0) {
@@ -337,6 +353,7 @@ public final class RyuFloat {
 					output /= 10;
 					index++;
 				}
+				builder.append(result, 0, index);
 			} else if (exp + 1 >= olength) {
 				// Decimal dot is after any of the digits.
 				for (int i = 0; i < olength; i++) {
@@ -344,11 +361,11 @@ public final class RyuFloat {
 					output /= 10;
 				}
 				index += olength;
+				builder.append(result, 0, index);
 				for (int i = olength; i < exp + 1; i++) {
-					result[index++] = '0';
+					builder.append('0');
 				}
-				result[index++] = '.';
-				result[index++] = '0';
+				builder.append('.').append('0');
 			} else {
 				// Decimal dot is somewhere between the digits.
 				int current = index + 1;
@@ -361,9 +378,9 @@ public final class RyuFloat {
 					output /= 10;
 				}
 				index += olength + 1;
+				builder.append(result, 0, index);
 			}
 		}
-		return new String(result, 0, index);
 	}
 
 	private static int pow5bits (int e) {
