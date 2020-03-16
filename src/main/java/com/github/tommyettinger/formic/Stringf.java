@@ -136,13 +136,13 @@ public final class Stringf {
 	}
 
 	//- conversions
-	static final byte CONV_LITRL = 0x0;
-	static final byte CONV_NLINE = 0x1;
-	static final byte CONV_PRCNT = 0x2;
-	static final byte CONV_BOOLN = 0x3;
-	static final byte CONV_DTIME = 0x4;
-	static final byte CONV_STRNG = 0x5;
-	static final byte CONV_HCODE = 0x6;
+	static final byte CONV_LITRL = 0x0; // literal
+	static final byte CONV_NLINE = 0x1; // newline (system)
+	static final byte CONV_PRCNT = 0x2; // percent sign (escaped)
+	static final byte CONV_BOOLN = 0x3; // boolean
+	static final byte CONV_DTIME = 0x4; // DateTime
+	static final byte CONV_STRNG = 0x5; // String
+	static final byte CONV_HCODE = 0x6; //
 	static final byte CONV_CHRCT = 0x7;
 	static final byte CONV_DECML = 0x8;
 	static final byte CONV_OCTAL = 0x9;
