@@ -32,8 +32,6 @@ public final class RyuDouble {
 	private static final int POS_TABLE_SIZE = 326;
 	private static final int NEG_TABLE_SIZE = 291;
 
-	// Only for debugging.
-	private static final BigInteger[] POW5 = new BigInteger[POS_TABLE_SIZE];
 	private static final BigInteger[] POW5_INV = new BigInteger[NEG_TABLE_SIZE];
 
 	private static final int POW5_BITCOUNT = 121; // max 3*31 = 124
@@ -47,23 +45,20 @@ public final class RyuDouble {
 	static {
 		BigInteger mask = BigInteger.valueOf(1).shiftLeft(POW5_QUARTER_BITCOUNT).subtract(BigInteger.ONE);
 		BigInteger invMask = BigInteger.valueOf(1).shiftLeft(POW5_INV_QUARTER_BITCOUNT).subtract(BigInteger.ONE);
-		for (int i = 0; i < Math.max(POW5.length, POW5_INV.length); i++) {
+		for (int i = 0; i < Math.max(POS_TABLE_SIZE, NEG_TABLE_SIZE); i++) {
 			BigInteger pow = BigInteger.valueOf(5).pow(i);
 			int pow5len = pow.bitLength();
 			int expectedPow5Bits = pow5bits(i);
 			if (expectedPow5Bits != pow5len) {
 				throw new IllegalStateException(pow5len + " != " + expectedPow5Bits);
 			}
-			if (i < POW5.length) {
-				POW5[i] = pow;
-			}
-			if (i < POW5_SPLIT.length) {
+			if (i < POS_TABLE_SIZE) {
 				for (int j = 0; j < 4; j++) {
 					POW5_SPLIT[i][j] = pow.shiftRight(pow5len - POW5_BITCOUNT + (3 - j) * POW5_QUARTER_BITCOUNT).and(mask).intValue();
 				}
 			}
 
-			if (i < POW5_INV_SPLIT.length) {
+			if (i < NEG_TABLE_SIZE) {
 				// We want floor(log_2 5^q) here, which is pow5len - 1.
 				int j = pow5len - 1 + POW5_INV_BITCOUNT;
 				BigInteger inv = BigInteger.ONE.shiftLeft(j).divide(pow).add(BigInteger.ONE);
@@ -82,7 +77,10 @@ public final class RyuDouble {
 	public static void main (String[] args) {
 		DEBUG = true;
 		double value = Double.longBitsToDouble(0x7fefffffffffffffL);
-		System.out.println(String.format("%s, %s, %s, %20f, %<20g, %<20e, %<20a, %<s", 
+		System.out.println(String.format("%s, %s, %s, %20.8f, %<(20.8f, %<20.8g, %<20.8e, %<20.8a, %<s",
+			doubleToString(value), doubleToString(value, -1), doubleToString(value, 1), value));
+		value = -10 - Math.PI;
+		System.out.println(String.format("%s, %s, %s, %020.8f, %<(020.8f, %<020.8g, %<020.8e, %<020.8a, %<s",
 			doubleToString(value), doubleToString(value, -1), doubleToString(value, 1), value));
 	}
 
