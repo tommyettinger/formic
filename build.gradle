@@ -18,9 +18,9 @@ apply from: 'publish.gradle'
 sourceCompatibility = 1.7
 
 def projectName = 'formic'
-version '0.1.0-SNAPSHOT'
+version '0.1.0'
 group 'com.github.tommyettinger'
-
+//api "com.github.tommyettinger:formic:0.1.0-SNAPSHOT"
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 compileJava.exclude("emu")
@@ -52,4 +52,5 @@ repositories {
 }
 
 dependencies {
+    api "com.google.elemental2:elemental2-core:1.0.0-RC1"
 }
