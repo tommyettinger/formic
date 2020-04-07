@@ -7,5 +7,6 @@
      <inherits name="text.formic" />
   -->
 <module>
+    <super-source path="emu" />
     <source path="formic"/>
 </module>
