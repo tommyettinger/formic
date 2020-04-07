@@ -7,7 +7,7 @@ public final class Stringf {
 		F4JSLibInjector.ensureInjected();
 	}
 	public static String format(String format, Object... args){
-		return fmt(format, new JsArray(args));
+		return fmt(format, new JsArray<>(args));
 	}
 	
 	private static native String fmt(String form, JsArray<Object> args) /*-{

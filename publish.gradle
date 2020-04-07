@@ -1,7 +1,7 @@
 modifyPom {
     project {
         name 'formic'
-        description 'Blue noise textures, both original and pseudo-randomly editable, in pure Java.'
+        description 'String.format() for GWT'
         url 'https://github.com/tommyettinger/formic'
         inceptionYear '2020'
 
@@ -13,8 +13,8 @@ modifyPom {
 
         licenses {
             license {
-                name 'ISC License'
-                url 'https://opensource.org/licenses/ISC'
+                name 'MIT License'
+                url 'https://opensource.org/licenses/mit-license.php'
                 distribution 'repo'
             }
         }
