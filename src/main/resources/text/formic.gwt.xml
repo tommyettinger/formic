@@ -7,7 +7,9 @@
      <inherits name="text.formic" />
   -->
 <module>
+    <inherits name="jsinterop.base.Base"/>
     <inherits name="elemental2.core.Core"/>
+    <inherits name="elemental2.dom.Dom"/>
     <super-source path="emu" />
     <source path="formic"/>
 </module>

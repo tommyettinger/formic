@@ -3,6 +3,9 @@ import elemental2.core.JsArray;
 
 public final class Stringf {
 	private Stringf(){}
+	static {
+		F4JSLibInjector.ensureInjected();
+	}
 	public static String format(String format, Object... args){
 		return fmt(format, new JsArray<>(args));
 	}
