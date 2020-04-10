@@ -558,7 +558,7 @@
     HexadecimalConverter.prototype = new IntegerConverter();
 
     HexadecimalConverter.prototype.convert = function(argument, precision, flags, width) {
-        var num = Math.floor(argument);
+        var num = (argument >>> 0);
         var str = num.toString(16);
 
         return this.format(num, str, flags, width);
