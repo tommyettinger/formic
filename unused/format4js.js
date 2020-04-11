@@ -808,12 +808,13 @@
             return 'NaN';
         }
         var that = +argument;
-        if (Object.is(that, +0.0)) {
+        if (that == 0.0) {
+//        if (Object.is(that, +0.0)) {
             return '0x0p+0';
-        } else if (Object.is(that, -0.0)) {
-            return '-0x0p+0';
+//        } else if (Object.is(that, -0.0)) {
+//            return '-0x0p+0';
         } else if (!isFinite(that)) {
-            return (that < 0 ? '-' : '') + 'Inf';
+            return (that < 0 ? '-' : '') + 'Infinity';
         }
         var sign = that < 0 ? '-' : '';
         var a = Math.abs(that);
@@ -821,10 +822,9 @@
         if (a < 1) {
             while (a < 1)  { a *= 2; p-- }
         } else {
-            while (a >= 2) { a /= 2; p++ }
+            while (a >= 2) { a *= 0.5; p++ }
         }
-        var es = p < 0 ? '' : '+';
-        var converted = sign + '0x' + a.toString(16) + 'p' + es + p.toString(10);
+        var converted = sign + '0x' + (precision < 0 ? a.toString(16) : precision == 0 ? '1' : a.toString(16).substring(0, 2 + precision)) + 'p' + p.toString(10);
         return this.format(num, converted, flags, width);
     };
 
