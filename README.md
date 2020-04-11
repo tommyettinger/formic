@@ -45,6 +45,9 @@ transfer from Java) and does almost no work of its own.
 ## Credits
 
 Most of the credit here goes to Hidenori Sugiyama, who made
-[format4js](https://github.com/madogiwa/format4js). The team behind vue-gwt also deserves
-significant credit for both the utility code that made some parts of this feasible and the
-injection code that obviates the need for separate JavaScript and HTML configuration.
+[format4js](https://github.com/madogiwa/format4js). The implementation for hexadecimal
+floating-point syntax is the work of [Dan Kogai](https://github.com/dankogai/js-hexfloat).
+The team behind [vue-gwt](https://github.com/VueGWT/vue-gwt) also deserves significant
+credit for both the utility code that made some parts of this feasible and the injection
+code that obviates the need for separate JavaScript and HTML configuration. All of these
+projects are MIT-licensed.

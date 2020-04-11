@@ -631,7 +631,7 @@
     };
 
     AbstractFloatConverter.prototype.formatSignSpace = function(str, num) {
-        if (num > 0) {
+        if (num >= 0) {
             return ' ' + str;
         } else {
             return str;
@@ -804,18 +804,27 @@
 
     HexadecimalFloatConverter.prototype.convert = function(argument, precision, flags, width) {
         var num = parseFloat(argument);
-
-        // IEEE 754
-        var exp = argument.toExponential();
-        var m = exp.match(/([0-9.]+)e([+-][0-9]+)/);
-        var a = m[1] - 2;
-        var bin = a.toString(2).replace('.', '');
-        if ((bin.length % 4) != 0) {
-            var len = 4 - bin.length % 4;
-            bin = paddingRight(bin, '0', bin.length + len);
+        if (isNaN(argument)) {
+            return 'NaN';
         }
-        var converted = '0x1.' + parseInt(bin, 2).toString(16) + 'p' + (parseInt(m[2]) + 1);
-
+        var that = +argument;
+        if (Object.is(that, +0.0)) {
+            return '0x0p+0';
+        } else if (Object.is(that, -0.0)) {
+            return '-0x0p+0';
+        } else if (!isFinite(that)) {
+            return (that < 0 ? '-' : '') + 'Inf';
+        }
+        var sign = that < 0 ? '-' : '';
+        var a = Math.abs(that);
+        var p = 0;
+        if (a < 1) {
+            while (a < 1)  { a *= 2; p-- }
+        } else {
+            while (a >= 2) { a /= 2; p++ }
+        }
+        var es = p < 0 ? '' : '+';
+        var converted = sign + '0x' + a.toString(16) + 'p' + es + p.toString(10);
         return this.format(num, converted, flags, width);
     };
 
