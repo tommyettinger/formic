@@ -824,6 +824,7 @@
         } else {
             while (a >= 2) { a *= 0.5; p++ }
         }
+        if(precision > 0) a += Math.pow(2, -4 * precision - 1);
         var converted = sign + '0x' + (precision < 0 ? a.toString(16) : precision == 0 ? '1' : a.toString(16).substring(0, 2 + precision)) + 'p' + p.toString(10);
         return this.format(num, converted, flags, width);
     };
