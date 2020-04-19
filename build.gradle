@@ -18,7 +18,7 @@ apply from: 'publish.gradle'
 sourceCompatibility = 1.7
 
 def projectName = 'formic'
-version '0.1.2-SNAPSHOT'
+version '0.1.2'
 group 'com.github.tommyettinger'
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 //api "com.github.tommyettinger:formic:0.1.2-SNAPSHOT"
