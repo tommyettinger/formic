@@ -207,7 +207,7 @@
             converted = paddingLeft(argument.getFullYear(), '0', 4);
             break;
           case 'y':
-            converted = paddingLeft(argument.getYear(), '0', 2);
+            converted = paddingLeft(argument.getFullYear() % 100, '0', 2);
             break;
           case 'j':
             var base = new Date(argument.getFullYear(), 0, 1);
@@ -244,7 +244,7 @@
             converted = hour + ':' + min + ':' + sec + ' ' + meridiem;
             break;
           case 'D':
-            var year = paddingLeft(argument.getYear(), '0', 2);
+            var year = paddingLeft(argument.getFullYear() % 100, '0', 2);
             var month = paddingLeft(argument.getMonth() + 1, '0', 2);
             var day = paddingLeft(argument.getDate(), '0', 2);
             converted = month + '/' + day + '/' + year;

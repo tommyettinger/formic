@@ -12,9 +12,9 @@ format4js means the hard work is done, so most of this library is a wrapper.
 Using this needs a little bit of setup before the application will run correctly.
 You can add a dependency on formic using your build tool (probably Gradle, but Maven should work
 too). Maven Central is now supported; see the
-[right sidebar here](https://search.maven.org/artifact/com.github.tommyettinger/formic/0.1.2/jar)
+[right sidebar here](https://search.maven.org/artifact/com.github.tommyettinger/formic/0.1.3/jar)
 for Gradle and Maven instructions. If you want a newer commit, you can also use
-[JitPack.io](https://jitpack.io/#tommyettinger/formic). Choosing release v0.1.2 should be good,
+[JitPack.io](https://jitpack.io/#tommyettinger/formic). Choosing release v0.1.3 should be good,
 but you can also pick a commit. JitPack shows instructions when you click "Get it" on a commit
 or release, and you probably need to add JitPack as a repository as well as to add the given
 dependency to your core project (if you have a project that is GWT-agnostic). Regardless of whether
@@ -55,11 +55,15 @@ projects are MIT-licensed.
 ## Version History
 
  * 0.1.1
-     * Initial working release; Strings, integers and some floating-point
+   * Initial working release; Strings, integers and some floating-point
        formats work correctly.
  * 0.1.2
    * Improved handling of hex floats (`%A` or `%a` syntax) from previously-unusable
      to now matching Java.
+ * 0.1.3
+   * Now Formic converts any `long` or `Long` values that it is given to `double`, because
+     GWT doesn't allow using longs from JS, plus, it converts `java.util.Date` objects to
+     their JS equivalents, allowing date/time conversions to work with them. Java's
+     `java.util.Calendar` is not converted because GWT doesn't support it.
  * Future release goals
-   * Verify that dates and times even work.
    * Stress-test all the unusual features and check for equivalence with Java.
