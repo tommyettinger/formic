@@ -1,30 +1,36 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.0"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
+        constraints {
+            classpath("org.apache.logging.log4j:log4j-core") {
+                version {
+                    strictly("[2.17, 3[")
+                    prefer("2.17.0")
+                }
+                because("CVE-2021-44228, CVE-2021-45046, CVE-2021-45105: Log4j vulnerable to remote code execution and other critical security vulnerabilities")
+            }
+        }
     }
 }
 
 apply plugin: 'java-library'
-apply plugin: 'com.bmuschko.nexus'
-apply plugin: 'io.codearte.nexus-staging'
-apply from: 'publish.gradle'
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'idea'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 def projectName = 'formic'
-version '0.1.4'
-group 'com.github.tommyettinger'
+version "$VERSION_NAME"
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 //api "com.github.tommyettinger:formic:0.1.4"
 
-compileJava.exclude("emu")
-javadoc.exclude("emu")
+idea.module.excludeDirs += [file("src/main/java/emu/")]
+[compileJava, compileTestJava, javadoc]*.exclude("emu")
 // Disable JDK 8's doclint
 // http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
 if (JavaVersion.current().isJava8Compatible()) {
@@ -33,6 +39,13 @@ if (JavaVersion.current().isJava8Compatible()) {
             // The -quiet is because of some sort of weird JDK JavaCompiler bug:
             // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
             options.addStringOption('Xdoclint:all,-missing', '-quiet')
+        }
+    }
+}
+if(JavaVersion.current().isJava9Compatible()) {
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.release.set(8)
         }
     }
 }
