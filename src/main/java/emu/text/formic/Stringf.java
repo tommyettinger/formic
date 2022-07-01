@@ -1,15 +1,11 @@
 package text.formic;
 import com.google.gwt.core.client.JsDate;
 import elemental2.core.JsArray;
-import text.formic.F4JSLibInjector;
 
 import java.util.Date;
 
 public final class Stringf {
 	private Stringf(){}
-	static {
-		F4JSLibInjector.ensureInjected();
-	}
 	public static String format(String format, Object... args){
 		JsArray ja = new JsArray<>();
 		for(Object o : args) {
