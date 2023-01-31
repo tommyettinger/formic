@@ -5,24 +5,13 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
-        constraints {
-            classpath("org.apache.logging.log4j:log4j-core") {
-                version {
-                    strictly("[2.17, 3[")
-                    prefer("2.17.0")
-                }
-                because("CVE-2021-44228, CVE-2021-45046, CVE-2021-45105: Log4j vulnerable to remote code execution and other critical security vulnerabilities")
-            }
-        }
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
     }
 }
 
 apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'idea'
-
-sourceCompatibility = 1.8
 
 def projectName = 'formic'
 version "$VERSION_NAME"
@@ -42,13 +31,23 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
-if(JavaVersion.current().isJava9Compatible()) {
-    allprojects {
-        tasks.withType(JavaCompile) {
-            options.release.set(8)
-        }
+
+compileJava {
+    sourceCompatibility = 7
+    targetCompatibility = 7
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set(7)
     }
 }
+
+compileTestJava {
+    sourceCompatibility = 8
+    targetCompatibility = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set(8)
+    }
+}
+
 sourceSets.test.resources.srcDirs += [ file('src/test/resources').path ]
 
 javadoc.destinationDir = file('docs/apidocs')
