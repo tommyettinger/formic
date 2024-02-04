@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"text.formic","c":"Stringf","l":"format(String, Object...)","u":"format(java.lang.String,java.lang.Object...)"}];updateSearchResults();

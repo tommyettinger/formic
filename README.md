@@ -12,9 +12,9 @@ format4js means the hard work is done, so most of this library is a wrapper.
 *tl;dr version for libGDX users*
 ```groovy
 //dependency of core module
-api 'com.github.tommyettinger:formic:0.1.4'
+api 'com.github.tommyettinger:formic:0.1.5'
 //dependency of html module
-api 'com.github.tommyettinger:formic:0.1.4:sources'
+api 'com.github.tommyettinger:formic:0.1.5:sources'
 ```
 
 And in your GdxDefinition.gwt.xml
@@ -27,9 +27,9 @@ And in your GdxDefinition.gwt.xml
 Using this needs a little bit of setup before the application will run correctly.
 You can add a dependency on formic using your build tool (probably Gradle, but Maven should work
 too). Maven Central is now supported; see the
-[right sidebar here](https://search.maven.org/artifact/com.github.tommyettinger/formic/0.1.4/jar)
+[right sidebar here](https://search.maven.org/artifact/com.github.tommyettinger/formic/0.1.5/jar)
 for Gradle and Maven instructions. If you want a newer commit, you can also use
-[JitPack.io](https://jitpack.io/#tommyettinger/formic). Choosing release v0.1.4 should be good,
+[JitPack.io](https://jitpack.io/#tommyettinger/formic). Choosing release v0.1.5 should be good,
 or you can instead pick a commit. JitPack shows instructions when you click "Get it" on a commit
 or release, and you probably need to add JitPack as a repository as well as to add the given
 dependency to your core project (if you have a project that is GWT-agnostic). Regardless of whether
@@ -84,5 +84,13 @@ projects are MIT-licensed. Thanks also to early testers, like damios!
    * Bugfix release: the GWT `inherits` has changed, and is now `formic` instead of `text.formic`.
      This improves compatibility with frequently-used project layouts, and allows builds to work
      more reliably.
+ * 0.1.5
+   * Update dependencies on GWT-related libraries to stable (non-release-candidate) versions.
+   * Build improvements.
+     * Gradle 8.6
+     * jsinterop:base 1.0.1
+     * elemental2 1.2.1
+     * GWT 2.11.0 worked already.
+     * JitPack is able to build again.
  * Future release goals
    * Stress-test all the unusual features and check for equivalence with Java.

@@ -16,7 +16,7 @@ apply plugin: 'idea'
 def projectName = 'formic'
 version "$VERSION_NAME"
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-//api "com.github.tommyettinger:formic:0.1.4"
+//api "com.github.tommyettinger:formic:0.1.5"
 
 idea.module.excludeDirs += [file("src/main/java/emu/")]
 [compileJava, compileTestJava, javadoc]*.exclude("emu")
@@ -24,10 +24,12 @@ idea.module.excludeDirs += [file("src/main/java/emu/")]
 // http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
-        tasks.withType(Javadoc) {
-            // The -quiet is because of some sort of weird JDK JavaCompiler bug:
-            // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
-            options.addStringOption('Xdoclint:all,-missing', '-quiet')
+        tasks.withType(Javadoc).tap {
+            configureEach {
+                // The -quiet is because of some sort of weird JDK JavaCompiler bug:
+                // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
+                options.addStringOption('Xdoclint:all,-missing', '-quiet')
+            }
         }
     }
 }
